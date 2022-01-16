@@ -1,0 +1,7 @@
+{
+  "verbose": true,
+  "watch": ["server.js"],
+  "ext": "js",
+  "ignore": ["*.spec.js", "src/*", "node_modules/*"],
+  "delay": "3"
+}
