@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useLazyQuery } from '@apollo/client';
 import { ENTER_EMAIL } from '../constants';
 import { GET_USER_BY_EMAIL } from '../graphql/queries';
-import { IEnterEmail } from '../declarations/index';
+import { IEnterEmail } from '../common/interfaces/form.interface';
 
 import {
   Form,
@@ -59,7 +59,8 @@ export const EnterEmail: React.FC<IProps> = ({ onToggleView }: IProps) => {
           {...register('email', {
             required: ENTER_EMAIL,
             pattern: {
-              value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              value:
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
               message: 'Enter a valid email',
             },
           })}

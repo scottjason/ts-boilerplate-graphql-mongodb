@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
 import { CREATE_USER } from '../graphql/mutations';
-import { IEnterPassword } from '../declarations/index';
+import { IEnterPassword } from '../common/interfaces/form.interface';
 import {
   ENTER_PASSWORD,
   PASSWORD_CRITERIA,

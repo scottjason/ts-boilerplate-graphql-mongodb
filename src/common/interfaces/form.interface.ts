@@ -5,8 +5,3 @@ export interface IEnterEmail {
 export interface IEnterPassword {
   password: string;
 }
-
-export type Session = {
-  isAuthenticated?: boolean;
-  redirectPath: string;
-};
