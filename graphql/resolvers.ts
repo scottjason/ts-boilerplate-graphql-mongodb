@@ -1,9 +1,16 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import User from '../models/user';
-import Token from '../models/token';
+import User from '../database/models/user';
+import Token from '../database/models/token';
 
-const generateToken = str => {
+const TOKEN_KEY = 'x-access-token';
+const cookieOpts = {
+  path: '/',
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+};
+
+const generateToken = (str: string): string | null => {
   if (str) {
     try {
       const token = JSON.parse(str);
@@ -15,38 +22,44 @@ const generateToken = str => {
   return null;
 };
 
-const isValidToken = str => {
+const isValidToken = (str: string): boolean => {
   if (str) {
     try {
       const token = generateToken(str);
-      return jwt.verify(token, process.env.JWT_SECRET);
+      return !!jwt.verify(token, process.env.JWT_SECRET);
     } catch (err) {
-      return null;
+      return false;
     }
   }
-  return null;
+  return false;
 };
 
-const getStatus = (token, tokens) => {
+const getStatus = (token: string, tokens: string[]): number => {
   return isValidToken(token) && tokens.length === 0 ? 200 : 401;
 };
 
 const resolvers = {
   Query: {
-    async getUserByEmail(_root, { input: { email } }) {
+    async getUserByEmail(_: any, args: any): Promise<object> {
+      const {
+        input: { email },
+      } = args;
       return User.findOne({ email });
     },
-    async isAuthenticated(_root, _args, ctx) {
-      const token = generateToken(ctx.req.cookies.token);
-      const tokens = await Token.find({ tags: token });
-      const status = getStatus(ctx.req.cookies.token, tokens);
+    async isAuthenticated(_: any, _args: any, ctx: any): Promise<object> {
+      const token: string = ctx.req.cookies['x-access-token'];
+      const tokens: string[] = await Token.find({ tags: token });
+      const status: number = getStatus(
+        ctx.req.cookies['x-access-token'],
+        tokens
+      );
       if (status === 401) {
         if (token) {
           const newToken = new Token();
           newToken.tags.push(token);
           newToken.save();
         }
-        ctx.res.clearCookie('token');
+        ctx.res.clearCookie(TOKEN_KEY);
       }
       return {
         status,
@@ -54,26 +67,25 @@ const resolvers = {
     },
   },
   Mutation: {
-    createUser: async (_root, { input: { email, password } }, ctx) => {
+    createUser: async (_: any, args: any, ctx: any): Promise<object> => {
+      const {
+        input: { email, password },
+      } = args;
       const salt = bcrypt.genSaltSync(10);
       try {
         const user = await User.create({
           email,
           password: bcrypt.hashSync(password, salt),
         });
-        const token = jwt.sign(
+
+        const token = await jwt.sign(
           { _id: user._id, email: user.email },
           process.env.JWT_SECRET,
           {
             expiresIn: '1d',
           }
         );
-        const cookieOpts = {
-          path: '/',
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-        };
-        ctx.res.cookie('token', JSON.stringify(token), cookieOpts);
+        ctx.res.cookie(TOKEN_KEY, JSON.stringify(token), cookieOpts);
         return {
           token,
         };
@@ -81,13 +93,20 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
-    signInUser: async (_root, { input: { email, password } }, ctx) => {
+    signInUser: async (_: any, args: any, ctx: any): Promise<object> => {
+      const {
+        input: { email, password },
+      } = args;
+
       try {
         const user = await User.findOne({
           email,
         });
 
-        const isValidPassword = bcrypt.compareSync(password, user.password);
+        const isValidPassword: boolean = bcrypt.compareSync(
+          password,
+          user.password
+        );
         if (isValidPassword) {
           const token = jwt.sign(
             { _id: user._id, email: user.email },
@@ -96,14 +115,8 @@ const resolvers = {
               expiresIn: '1d',
             }
           );
-          const cookieOpts = {
-            path: '/',
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-          };
-          ctx.res.cookie('token', JSON.stringify(token), cookieOpts);
+          ctx.res.cookie(TOKEN_KEY, JSON.stringify(token), cookieOpts);
         }
-
         return {
           isAuthenticated: isValidPassword,
         };
@@ -111,14 +124,14 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
-    signOutUser: async (_root, _args, ctx) => {
-      const token = generateToken(ctx.req.cookies.token);
+    signOutUser: async (_: any, _args: any, ctx: any): Promise<object> => {
+      const token: string = ctx.req.cookies['x-access-token'];
       if (token) {
         const newToken = new Token();
         newToken.tags.push(token);
         newToken.save();
       }
-      ctx.res.clearCookie('token');
+      ctx.res.clearCookie(TOKEN_KEY);
       return {
         status: 200,
       };

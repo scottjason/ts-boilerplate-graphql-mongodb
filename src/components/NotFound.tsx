@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router';
 import { Container, Heading } from '../styles/Dashboard.style';
 import { NextButton, ButtonWrap } from '../styles/Authenticate.style';
 
-export const NotFound: React.FC = () => {
-  const navigagte = useNavigate();
+export const NotFound = (): JSX.Element => {
   return (
     <>
       <Container>
         <Heading>Page Not Found</Heading>
         <ButtonWrap style={{ width: 'unset' }}>
-          <NextButton onClick={() => navigagte('/')}>Back to Login</NextButton>
+          <NextButton onClick={() => (window.location.href = '/')}>
+            Back to Login
+          </NextButton>
         </ButtonWrap>
       </Container>
     </>

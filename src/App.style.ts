@@ -62,7 +62,7 @@ export const NavLink = styled.div`
   cursor: pointer;
 `;
 
-export const IconGithubWrap = styled.div`
+export const IconGithubWrap = styled.div<{ type: string }>`
   margin: 0.125rem 0.55rem 0 0;
 `;
 

@@ -1,4 +1,3 @@
-// import 'animate.css';
 import * as React from 'react';
 import { App } from './App';
 import { render } from 'react-dom';
@@ -13,6 +12,7 @@ const generateUri = () => {
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   uri: generateUri(),
+  credentials: 'include',
 });
 
 const ApolloApp = (AppComponent: React.FC) => (
@@ -21,4 +21,4 @@ const ApolloApp = (AppComponent: React.FC) => (
   </ApolloProvider>
 );
 
-render(ApolloApp(App), document.getElementById('root'));
+render(ApolloApp(App), document.getElementById('root') as HTMLElement);

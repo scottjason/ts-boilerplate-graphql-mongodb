@@ -1,9 +1,15 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
-import { useNavigate } from 'react-router-dom';
 import { CREATE_USER } from '../graphql/mutations';
-import { IEnterPassword } from '../types/authenticateTypes';
+import { IEnterPassword } from '../declarations/index';
+import {
+  ENTER_PASSWORD,
+  PASSWORD_CRITERIA,
+  LOWERCASE_PASSWORD,
+  ENTER_VALID_PASSWORD,
+  ENTER_PASSWORD_TO_REGISTER,
+} from '../constants';
 
 import {
   Form,
@@ -17,12 +23,11 @@ import {
   PasswordError,
 } from '../styles/Authenticate.style';
 
-interface IProps {
+interface Props {
   email: string;
 }
 
-export const CreateAccount = ({ email }: IProps) => {
-  const navigate = useNavigate();
+export const CreateAccount = ({ email }: Props) => {
   const {
     register,
     handleSubmit,
@@ -30,49 +35,44 @@ export const CreateAccount = ({ email }: IProps) => {
   } = useForm();
 
   const [createUser] = useMutation(CREATE_USER, {
-    onCompleted: res => {
-      console.log('res', res);
+    onCompleted: (res): void => {
       const {
         createUser: { token },
       } = res;
       if (token) {
-        navigate('/dashboard');
+        window.location.href = '/dashboard';
       }
     },
-    onError: err => {
+    onError: (err): void => {
       console.log('create account error', err.message);
     },
   });
 
-  const onSubmit = ({ password }: IEnterPassword) => {
+  const onSubmit = ({ password }: IEnterPassword): void => {
     createUser({ variables: { email, password } });
   };
 
   return (
     <Container>
       <HeadingWrap>
-        <Heading isWelcome={false}>Enter Password to Register</Heading>
+        <Heading isWelcome={false}>{ENTER_PASSWORD_TO_REGISTER}</Heading>
         <Email>{email}</Email>
       </HeadingWrap>
       <Form>
         <InputField
-          type="password"
+          type={LOWERCASE_PASSWORD}
           pushDown={true}
-          placeholder="Enter Password"
-          {...register('password', { required: true })}
-          {...register('password', {
-            required: 'Enter Password',
+          placeholder={ENTER_PASSWORD}
+          {...register(LOWERCASE_PASSWORD, { required: true })}
+          {...register(LOWERCASE_PASSWORD, {
+            required: ENTER_PASSWORD,
             pattern: {
               value: /^(?=.*?[a-z]).{8,}$/,
-              message: 'Enter a valid password',
+              message: ENTER_VALID_PASSWORD,
             },
           })}
         />
-        {errors.password && (
-          <PasswordError>
-            Password must be at least 8 characters, uppercase and lowercase.
-          </PasswordError>
-        )}
+        {errors.password && <PasswordError>{PASSWORD_CRITERIA}</PasswordError>}
         <ButtonWrap>
           <NextButton onClick={handleSubmit(onSubmit)}>
             Create Account

@@ -2,8 +2,18 @@ import * as React from 'react';
 import { useQuery } from '@apollo/client';
 import { IS_AUTHENTICATED } from '../graphql/queries';
 
-type Props = {
+interface Props {
   children: JSX.Element;
+}
+
+interface User {
+  isFetched: boolean;
+  isAuthenticated: boolean;
+}
+
+const intitialState = {
+  isFetched: false,
+  isAuthenticated: false,
 };
 
 const authContext = React.createContext(null);
@@ -17,8 +27,8 @@ export const useAuth = () => {
   return React.useContext(authContext);
 };
 
-function useProvideAuth() {
-  const [user, setUser] = React.useState(null);
+function useProvideAuth(): User {
+  const [user, setUser] = React.useState<User>(intitialState);
   const { error, data } = useQuery(IS_AUTHENTICATED);
   React.useEffect(() => {
     if (data?.isAuthenticated?.status) {

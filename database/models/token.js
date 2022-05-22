@@ -4,6 +4,6 @@ const tokenSchema = new Schema({
   tags: [{ type: String }],
 });
 
-const Token = model('token', tokenSchema);
+const Token = model('x-access-token', tokenSchema);
 
 export default Token;

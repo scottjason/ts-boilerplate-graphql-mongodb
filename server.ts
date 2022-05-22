@@ -2,10 +2,10 @@ import 'dotenv/config';
 import path from 'path';
 import express, { Request, Response } from 'express';
 import { ApolloServer } from 'apollo-server-express';
+import { db } from './database';
 import typeDefs from './graphql/schema';
-import { middleware } from './middleware/index';
 import resolvers from './graphql/resolvers';
-import { connectToMongo } from './database';
+import { middleware } from './config/middleware';
 
 const { PORT, NODE_ENV, DEV_ORIGIN, PROD_ORIGIN } = process.env;
 
@@ -15,12 +15,12 @@ const isDevelopment: boolean = NODE_ENV === 'development';
 const staticDir: string = isDevelopment ? './dist' : '.';
 const origin: string = isDevelopment ? DEV_ORIGIN : PROD_ORIGIN;
 
-interface Opts {
+interface CorsOpts {
   origin: string;
   credentials: boolean;
 }
 
-const cors: Opts = {
+const cors: CorsOpts = {
   origin,
   credentials: true,
 };
@@ -54,6 +54,4 @@ const startServer = async (): Promise<void> => {
   });
 };
 
-(async () => {
-  connectToMongo(startServer);
-})();
+db.connect().then((): Promise<void> => startServer());

@@ -1,5 +1,23 @@
 import * as React from 'react';
-import { Dashboard } from './components/Dashboard';
+import { SiGraphql } from 'react-icons/si';
+import { FaGithub } from 'react-icons/fa';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { GITHUB_REPO_URL } from './constants';
+import { BackButtonListener } from './components/BackButtonListener';
+import { ProvideAuth } from './hooks/useAuth';
+
+const Authenticate = React.lazy(async () => ({
+  default: (await import('./components/Authenticate')).Authenticate,
+}));
+
+const NotFound = React.lazy(async () => ({
+  default: (await import('./components/NotFound')).NotFound,
+}));
+
+const Dashboard = React.lazy(async () => ({
+  default: (await import('./components/Dashboard')).Dashboard,
+}));
+
 import {
   GlobalStyle,
   Container,
@@ -9,46 +27,38 @@ import {
   Heading,
   InnerLeftNav,
 } from './App.style';
-import { FaGithub } from 'react-icons/fa';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { NotFound } from './components/NotFound';
-import { Authenticate } from './components/Authenticate';
-import { BackButtonListener } from './components/BackButtonListener';
-import { ProvideAuth } from './hooks/useAuth';
-import { SiGraphql } from 'react-icons/si';
 
-const GITHUB_REPO =
-  'https://github.com/scottjason/ts-boilerplate-graphql-mongodb';
-
-export const App = () => {
+export const App = (): JSX.Element => {
   return (
     <ProvideAuth>
       <BackButtonListener>
         <Router>
           <GlobalStyle />
-          <Container>
-            <Navbar>
-              <InnerLeftNav>
-                <IconWrap type="graphql">
-                  <SiGraphql className="animate__animated animate__rotateIn" />
-                </IconWrap>
-                <Link to="/">
-                  <Heading>GRAPHQL AUTHENTICATION</Heading>
-                </Link>
-              </InnerLeftNav>
-              <NavLink onClick={() => window.open(GITHUB_REPO)}>
-                <IconWrap type="">
-                  <FaGithub />
-                </IconWrap>
-                <Heading>SOURCE CODE</Heading>
-              </NavLink>
-            </Navbar>
-            <Routes>
-              <Route path="/" element={<Authenticate />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Container>
+          <React.Suspense fallback={<div>Loading...</div>}>
+            <Container>
+              <Navbar>
+                <InnerLeftNav>
+                  <IconWrap type='graphql'>
+                    <SiGraphql className='animate__animated animate__rotateIn' />
+                  </IconWrap>
+                  <Link to='/'>
+                    <Heading>AUTHENICATION WITH GRAPHQL / MONGO</Heading>
+                  </Link>
+                </InnerLeftNav>
+                <NavLink onClick={() => window.open(GITHUB_REPO_URL)}>
+                  <IconWrap type=''>
+                    <FaGithub />
+                  </IconWrap>
+                  <Heading>SOURCE CODE</Heading>
+                </NavLink>
+              </Navbar>
+              <Routes>
+                <Route path='/' element={<Authenticate />} />
+                <Route path='/dashboard' element={<Dashboard />} />
+                <Route path='*' element={<NotFound />} />
+              </Routes>
+            </Container>
+          </React.Suspense>
         </Router>
       </BackButtonListener>
     </ProvideAuth>

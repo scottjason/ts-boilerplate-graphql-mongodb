@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useLazyQuery } from '@apollo/client';
+import { ENTER_EMAIL } from '../constants';
 import { GET_USER_BY_EMAIL } from '../graphql/queries';
-import { IEnterEmail } from '../types/authenticateTypes';
+import { IEnterEmail } from '../declarations/index';
 
 import {
   Form,
@@ -20,7 +21,7 @@ interface IProps {
 }
 
 export const EnterEmail: React.FC<IProps> = ({ onToggleView }: IProps) => {
-  const [email, setEmail] = React.useState('');
+  const [email, setEmail] = React.useState<string>('');
 
   const {
     register,
@@ -32,9 +33,9 @@ export const EnterEmail: React.FC<IProps> = ({ onToggleView }: IProps) => {
     onCompleted: res => {
       const isRegistered = !!res.getUserByEmail;
       if (!isRegistered) {
-        onToggleView('create-account', email);
+        onToggleView('createAccount', email);
       } else {
-        onToggleView('sign-in', email);
+        onToggleView('signIn', email);
       }
     },
     onError: err => {
@@ -46,7 +47,6 @@ export const EnterEmail: React.FC<IProps> = ({ onToggleView }: IProps) => {
     setEmail(email);
     getUserByEmail({ variables: { email } });
   };
-
   return (
     <Container>
       <HeadingWrap>
@@ -54,10 +54,10 @@ export const EnterEmail: React.FC<IProps> = ({ onToggleView }: IProps) => {
       </HeadingWrap>
       <Form>
         <InputFieldEmail
-          type="email"
-          placeholder="Enter Email"
+          type='email'
+          placeholder={ENTER_EMAIL}
           {...register('email', {
-            required: 'Enter Email',
+            required: ENTER_EMAIL,
             pattern: {
               value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
               message: 'Enter a valid email',

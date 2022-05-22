@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
-import { useNavigate } from 'react-router-dom';
 import { SIGN_IN_USER } from '../graphql/mutations';
-import { IEnterPassword } from '../types/authenticateTypes';
+import { IEnterPassword } from '../declarations/index';
 
 import {
   Form,
@@ -20,8 +19,7 @@ interface IProps {
   email: string;
 }
 
-export const SignIn: React.FC<IProps> = ({ email }: IProps) => {
-  const navigate = useNavigate();
+export const SignIn = ({ email }: IProps): JSX.Element => {
   const {
     register,
     handleSubmit,
@@ -31,7 +29,7 @@ export const SignIn: React.FC<IProps> = ({ email }: IProps) => {
   const [signInUser] = useMutation(SIGN_IN_USER, {
     onCompleted: (res: any) => {
       if (res?.signInUser.isAuthenticated) {
-        navigate('/dashboard');
+        window.location.href = '/dashboard';
       }
     },
     onError: (err: any) => {
@@ -53,9 +51,9 @@ export const SignIn: React.FC<IProps> = ({ email }: IProps) => {
         <Form>
           <Email>{email}</Email>
           <InputField
-            type="password"
+            type='password'
             pushDown={true}
-            placeholder="Enter Password"
+            placeholder='Enter Password'
             {...register('password', { required: true })}
           />
           {errors.password && <p>Password is required.</p>}

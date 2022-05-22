@@ -7,7 +7,7 @@ type Props = {
 export const BackButtonListener = ({ children }: Props) => {
   React.useEffect(() => {
     window.onpopstate = () => {
-      window.location.reload();
+      // window.location.reload();
     };
   });
 

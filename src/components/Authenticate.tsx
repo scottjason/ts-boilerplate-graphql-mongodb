@@ -1,20 +1,18 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router';
 import { EnterEmail } from './EnterEmail';
 import { CreateAccount } from './CreateAccount';
 import { useAuth } from '../hooks/useAuth';
 import { SignIn } from './SignIn';
 
-export const Authenticate: React.FC = () => {
+export const Authenticate = (): JSX.Element => {
   const auth = useAuth();
-  const navigate = useNavigate();
-  const [email, setEmail] = React.useState('');
-  const [view, setView] = React.useState('enter-email');
+  const [email, setEmail] = React.useState<string>('');
+  const [view, setView] = React.useState<string>('enterEmail');
   const [isLoaded, setIsLoaded] = React.useState(false);
 
   React.useEffect(() => {
     if (auth.isFetched && auth.isAuthenticated) {
-      navigate('/dashboard');
+      window.location.href = '/dashboard';
     } else if (auth.isFetched) {
       setIsLoaded(true);
     }
@@ -27,11 +25,12 @@ export const Authenticate: React.FC = () => {
 
   return (
     <>
+      {!isLoaded && null}
       {isLoaded && (
         <>
-          {view === 'enter-email' && <EnterEmail onToggleView={onToggleView} />}
-          {view === 'create-account' && <CreateAccount email={email} />}
-          {view === 'sign-in' && <SignIn email={email} />}
+          {view === 'enterEmail' && <EnterEmail onToggleView={onToggleView} />}
+          {view === 'createAccount' && <CreateAccount email={email} />}
+          {view === 'signIn' && <SignIn email={email} />}
         </>
       )}
     </>
