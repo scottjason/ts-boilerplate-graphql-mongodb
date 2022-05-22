@@ -6,7 +6,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 
 const generateUri = () => {
   return process.env.NODE_ENV === 'production'
-    ? 'https://graphql-authentication.herokuapp.com/graphql'
+    ? 'https://ts-auth-graphql-mongodb.herokuapp.com/graphql'
     : 'http://localhost:3000/graphql';
 };
 

@@ -1,22 +1,30 @@
 {
-  "name": "react-graphql-authentication",
+  "name": "ts-boilerplate-graphql-mongodb",
   "version": "1.0.0",
-  "description": "Authentication boilerplate",
+  "description": "Full Stack boilerplate with JWT Authentication, uses MongoDB",
   "author": "Scott Jason",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:scottjason/ts-boilerplate-graphql-mongodb.git"
+  },
   "engines": {
-    "node": "14.x",
-    "npm": "^6 || ^8"
+    "npm": "8.x",
+    "node": "14.x"
   },
   "keywords": [
+    "jwt",
     "react",
     "node",
+    "mongo",
     "apollo",
     "graphql",
-    "mongoDB",
+    "mongodb",
+    "mongoose",
     "express",
     "webpack",
     "typescript",
+    "boilerplate",
     "authentication"
   ],
   "scripts": {

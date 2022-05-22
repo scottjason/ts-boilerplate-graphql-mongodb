@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
 const generateUri = () => {
-  const { DB_NAME, CLUSTER, DB_USERNAME, DB_PASSWORD } = process.env;
-  return `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}${CLUSTER}.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
+  const { CLUSTER, DB_NAME, DB_USERNAME, DB_PASSWORD } = process.env;
+  return `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${CLUSTER}.${DB_NAME}.net?retryWrites=true&w=majority`;
 };
 
 export const connectToMongo = cb => {
