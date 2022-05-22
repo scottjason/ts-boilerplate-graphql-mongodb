@@ -1,61 +1,33 @@
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebPackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { merge } = require('webpack-merge');
+const common = require('./webpack.common.config');
+const paths = require('./paths');
 
-const nodeEnv = process.env.NODE_ENV;
-
-const plugins = [
-  new CleanWebpackPlugin(),
-  new HtmlWebPackPlugin({
-    template: './src/index.html',
-    filename: './index.html',
-  }),
-  new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: JSON.stringify(nodeEnv),
-    },
-  }),
-];
-
-module.exports = {
-  target: 'web',
-  devtool: false,
+module.exports = merge(common, {
   mode: 'development',
-  entry: ['./src/index.tsx'],
-  plugins,
-  output: {
-    path: path.resolve(process.cwd(), './dist'),
-  },
-  resolve: {
-    extensions: ['.js', 'jsx', '.ts', '.tsx'],
+  target: 'web',
+  devtool: 'inline-source-map',
+  devServer: {
+    historyApiFallback: true,
+    open: true,
+    compress: true,
+    hot: true,
+    port: 8080,
+    static: paths.build,
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
-      },
-      {
-        test: /\.(ts|tsx)$/,
-        use: 'ts-loader',
-        exclude: '/node_modules/',
-      },
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.html$/,
+        test: /\.(scss|css)$/,
         use: [
+          'style-loader',
           {
-            loader: 'html-loader',
+            loader: 'css-loader',
+            options: { sourceMap: true, importLoaders: 1, modules: true },
           },
+          { loader: 'postcss-loader', options: { sourceMap: true } },
+          { loader: 'sass-loader', options: { sourceMap: true } },
         ],
       },
     ],
   },
-};
+});

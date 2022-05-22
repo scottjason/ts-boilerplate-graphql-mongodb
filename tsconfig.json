@@ -11,6 +11,8 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "noImplicitAny": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
     "lib": ["es5", "es6", "dom", "dom.iterable"]
   },

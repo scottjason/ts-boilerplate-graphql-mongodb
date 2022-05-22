@@ -1,64 +1,57 @@
-const path = require('path');
-const webpack = require('webpack');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { merge } = require('webpack-merge');
+const CopyPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const common = require('./webpack.common.config');
+const paths = require('./paths');
 
-const nodeEnv = process.env.NODE_ENV;
-
-const plugins = [
-  new CleanWebpackPlugin(),
-  new HtmlWebpackPlugin({
-    template: 'src/index.html',
-  }),
-  new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: JSON.stringify(nodeEnv),
-    },
-  }),
-];
-
-module.exports = {
+module.exports = merge(common, {
   mode: 'production',
-  entry: path.resolve(__dirname, '../src/index.tsx'),
+  devtool: 'source-map',
   output: {
-    path: path.resolve(__dirname, '../dist'),
-  },
-  resolve: {
-    extensions: ['.js', 'jsx', '.ts', '.tsx'],
+    path: paths.build,
+    publicPath: '/',
+    filename: 'js/[name].[contenthash].bundle.js',
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
-      },
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.html$/i,
+        test: /\.(scss|css)$/,
         use: [
+          MiniCssExtractPlugin.loader,
           {
-            loader: 'html-loader',
+            loader: 'css-loader',
+            options: {
+              importLoaders: 2,
+              sourceMap: false,
+              modules: true,
+            },
           },
+          'postcss-loader',
+          'sass-loader',
         ],
-      },
-      {
-        test: /\.(ts|tsx)$/,
-        use: 'ts-loader',
-        exclude: '/node_modules/',
       },
     ],
   },
-  plugins: plugins,
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: 'styles/[name].[contenthash].css',
+      chunkFilename: '[id].css',
+    }),
+    new CopyPlugin({
+      patterns: [{ from: 'src/robots.txt', to: 'robots.txt' }],
+    }),
+  ],
   optimization: {
-    splitChunks: {
-      chunks: 'all',
+    minimize: true,
+    minimizer: [new CssMinimizerPlugin(), '...'],
+    runtimeChunk: {
+      name: 'runtime',
     },
   },
-  performance: { hints: false },
-};
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000,
+  },
+});

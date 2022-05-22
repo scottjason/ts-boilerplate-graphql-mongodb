@@ -1,4 +1,4 @@
-import 'animate.css';
+// import 'animate.css';
 import * as React from 'react';
 import { App } from './App';
 import { render } from 'react-dom';

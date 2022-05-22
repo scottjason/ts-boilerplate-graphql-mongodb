@@ -17,7 +17,8 @@ import { BackButtonListener } from './components/BackButtonListener';
 import { ProvideAuth } from './hooks/useAuth';
 import { SiGraphql } from 'react-icons/si';
 
-const GITHUB_REPO = 'https://github.com/scottjason/graphql-authentication';
+const GITHUB_REPO =
+  'https://github.com/scottjason/ts-boilerplate-graphql-mongodb';
 
 export const App = () => {
   return (

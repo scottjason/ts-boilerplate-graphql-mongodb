@@ -1,19 +1,11 @@
 module.exports = {
   presets: [
-    [
-      '@babel/preset-env',
-      {
-        loose: true,
-        useBuiltIns: 'usage',
-        corejs: '3',
-        modules: false,
-      },
-    ],
+    '@babel/preset-env',
     '@babel/preset-react',
+    '@babel/preset-typescript',
   ],
   plugins: [
-    '@babel/plugin-transform-runtime',
-    '@babel/plugin-syntax-dynamic-import',
     '@babel/plugin-proposal-class-properties',
+    '@babel/plugin-proposal-object-rest-spread',
   ],
 };
