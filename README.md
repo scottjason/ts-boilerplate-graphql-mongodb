@@ -8,7 +8,7 @@ Full Stack boilerplate with JWT authentication.
 
 Built with React, Typescript, Node, Express, GraphQL, MongoDB, Mongoose, and Webpack.
 
-Uses custom hooks and code splitting optimization via route-based component lazy loading with the Suspense component.
+Uses custom hooks and [code splitting optimization](https://reactjs.org/docs/code-splitting.html) via route-based component lazy loading with the Suspense component.
 
 Unexpired tokens on sign-out are stored in a Mongo collection and checked against on all authentication attempts.
 
