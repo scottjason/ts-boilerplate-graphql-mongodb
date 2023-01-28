@@ -14,7 +14,7 @@ Unexpired tokens on sign-out are stored in a Mongo collection and checked agains
 
 ## Deployed App
 
-[Deployed on heroku, open app.](https://ts-auth-graphql-mongodb.herokuapp.com)
+Deployed to [Render.com](https://render.com), [open app](https://ts-boilerplate-graphql-mongodb.onrender.com).
 
 ## Installation
 
