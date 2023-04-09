@@ -5,7 +5,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 
 const generateUri = () => {
   return process.env.NODE_ENV === 'production'
-    ? 'https://ts-boilerplate-graphql-mongodb-production.up.railway.app/graphql'
+    ? 'https://ts-boilerplate-graphql-mongodb.netlify.app/graphql'
     : 'http://localhost:3000/graphql';
 };
 
