@@ -9,8 +9,8 @@
     "url": "git@github.com:scottjason/ts-boilerplate-graphql-mongodb.git"
   },
   "engines": {
-    "npm": "8.x",
-    "node": "14.x"
+    "npm": "8.x || 9.x",
+    "node": "18.x"
   },
   "keywords": [
     "jwt",
