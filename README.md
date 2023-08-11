@@ -14,7 +14,7 @@ Unexpired tokens on sign-out are stored in a Mongo collection and checked agains
 
 ## Deployed App
 
-Deployed to Railway, [open app](https://ts-boilerplate-graphql-mongodb-production.up.railway.app/).
+Deployed to Fly.io, [open app](https://ts-boilerplate-graphql-mongodb.fly.dev).
 
 ## Installation
 
